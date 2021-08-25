@@ -1,0 +1,16 @@
+/*
+class Block: public AST{
+  Block(): letdef_list(), typedef_list() {}
+  ~Block() {
+    for (Letdef *l : letdef_list) delete l;
+    for (Typedef *t : typedef_list) delete t;
+   }
+
+  void appendLet(Letdef *l) { letdef_list.push_back(l); }
+  void appendType(Typedef *t) { typedef_list.push_back(t); }
+
+private:
+  std::vector<Letdef *> letdef_list;
+  std::vector<Typedef *> typedef_list;
+};
+*/

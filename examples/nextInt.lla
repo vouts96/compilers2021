@@ -1,0 +1,6 @@
+let main =
+  let
+  input = read_int ()
+  in
+  print_int (input + 1);
+  print_string "\n"

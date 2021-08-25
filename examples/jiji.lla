@@ -1,0 +1,28 @@
+let print_grid =
+  for x = 0 to 10
+    do
+      print_string "JIJI\n"
+    done;
+    print_string "\n"
+
+
+let test x =
+  malakas [ dim 2 x, 12, 43, 43, delete x, Asdf dim 2 s]
+
+type malakas = Yolo
+
+
+let x = 2 and y = 4 and z = "nice"
+
+
+let x = new malakas
+
+let x = new array of malakas
+
+
+type tupos = Kapoios and allos = Eteros
+
+
+let comma = x [ 1, 2, "hi"]
+
+let x a = 12

@@ -1,0 +1,16 @@
+let fun x = 'a'
+
+let y = 12.90
+
+let z =
+  let y = 0 in
+  print_int 2
+
+
+let y x = x + y 2 "sadsad" ! 2
+
+
+let main x d s : unit = true
+
+
+let mutable main [true, malakas, 12, 33] : unit
