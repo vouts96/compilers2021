@@ -113,7 +113,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 93 "parser.y" /* yacc.c:1909  */
+#line 96 "parser.y" /* yacc.c:1909  */
 
   Letdef *let;
   Expr *expr;

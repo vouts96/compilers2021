@@ -18,7 +18,6 @@ using namespace std;
 #define BLUE "\u001b[34m"
 #define GREEN "\u001b[32m"
 
-
 class evalRet{
 public:
   evalRet(int i, float f, char c, string s): intValue(i), floatValue(f), charValue(c), stringValue(s){}
@@ -101,6 +100,7 @@ private:
 
 //extern std::map<string, Symbol> symbolTable;
 extern std::list<Symbol> symbolTable;
+extern int lineno;
 
 
 class AST {
@@ -179,7 +179,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    ////out << "hello";
   }
 
   virtual evalRet eval(string scope) const override{}
@@ -210,7 +210,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
   string getTypeName(){
@@ -231,7 +231,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
 private:
@@ -248,7 +248,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
 private:
@@ -264,7 +264,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
 private:
@@ -291,7 +291,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
   bool isEmpty(){
@@ -315,7 +315,7 @@ public:
 
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
   virtual evalRet eval(string scope) const override{}
@@ -350,7 +350,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
   bool isEmpty(){
@@ -374,7 +374,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 private:
   ConstrId *conName;
@@ -391,7 +391,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
   virtual evalRet eval(string scope) const override{}
@@ -407,7 +407,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
   virtual evalRet eval(string scope) const override{}
@@ -423,7 +423,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
   virtual evalRet eval(string scope) const override{}
@@ -440,7 +440,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
   virtual evalRet eval(string scope) const override{}
@@ -457,7 +457,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
   virtual evalRet eval(string scope) const override{}
@@ -478,7 +478,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
   virtual evalRet eval(string scope) const override{}
@@ -498,7 +498,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
   virtual evalRet eval(string scope) const override{}
@@ -518,7 +518,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
   virtual evalRet eval(string scope) const override{}
@@ -558,7 +558,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
   virtual evalRet eval(string scope) const override{}
@@ -577,7 +577,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
   virtual evalRet eval(string scope) const override{}
@@ -597,7 +597,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
   virtual evalRet eval(string scope) const override{}
@@ -617,7 +617,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
   virtual evalRet eval(string scope) const override{}
@@ -645,7 +645,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
   virtual evalRet eval(string scope) const override{}
@@ -669,7 +669,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
   virtual evalRet eval(string scope) const override{}
@@ -693,7 +693,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 private:
   Id *idName;
@@ -722,7 +722,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
   bool isEmpty(){
@@ -744,7 +744,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
 
@@ -752,18 +752,7 @@ private:
 Id *idName;
 };
 
-/*
-class ParId: public Par{
-public:
-  ParId(string s): parName(s) {}
 
-  virtual void printOn(std::ostream &out) const override {
-    out << "par_id(" << parName << ")";
-  }
-private:
-  string parName;
-};
-*/
 class ParType: public Par{
 public:
   ParType(Id *id, Type *t): idName(id), myType(t) {}
@@ -773,6 +762,14 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
+    for (std::list<Symbol>::iterator it=symbolTable.begin(); it != symbolTable.end(); it++){
+      if(((*it).getSymbolName() == idName->getIdName())  && ((*it).getSymbolScope() == scope)){
+        string temp = (*it).getSymbolName();
+        cout << "error: duplicate identifier with name \"" << temp << "\""<< endl;
+        exit(1);
+      }
+    }
+
     Symbol idSymbol(idName->getIdName(), scope, myType->getTypeName());
     //symbolTable.insert(std::pair<string, Symbol>(idName->getIdName(), id));
     symbolTable.push_back(idSymbol);
@@ -839,7 +836,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
     if(!def_list.empty()){
       for (Def *d : def_list) {
         d->run(out, "global");
@@ -889,6 +886,13 @@ public:
       exit(1);
     }
     else{
+      for (std::list<Symbol>::iterator it=symbolTable.begin(); it != symbolTable.end(); it++){
+        if(((*it).getSymbolName() == idName->getIdName())  && ((*it).getSymbolScope() == "global")){
+          string temp = (*it).getSymbolName();
+          cout << "error: duplicate identifier with name \"" << temp << "\""<< endl;
+          exit(1);
+        }
+      }
       Symbol idSymbol(idName->getIdName(), "global", myType->getTypeName());
       //symbolTable.insert(std::pair<string, Symbol>(idName->getIdName(), id));
       symbolTable.push_back(idSymbol);
@@ -920,7 +924,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
   virtual evalRet eval(string scope) const override{}
@@ -950,7 +954,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
   bool isEmpty(){
@@ -992,7 +996,7 @@ public:
   }
 
   virtual void run(std::ostream &out, string scope) const override{
-    out << "hello";
+    //out << "hello";
   }
 
   virtual evalRet eval(string scope) const override{}

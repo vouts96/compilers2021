@@ -6,9 +6,12 @@
 #include "ast.hpp"
 #include "lexer.hpp"
 
-
 std::list<Symbol> symbolTable;
 %}
+
+
+
+
 
 %token T_and "and"
 %token T_array "array"
@@ -333,6 +336,7 @@ pattern:
 */
 
 %%
+
 int main() {
   int result = yyparse();
   if (result == 0) printf("Success.\n");

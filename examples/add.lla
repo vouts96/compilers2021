@@ -1,1 +1,7 @@
-let add (x: int) (y: int) : int = x + y
+let add (x: int) (y : int)  : int =
+  print_int (x + y)
+
+
+let y : int = add 2 3
+
+let z : char = '\xFF'
