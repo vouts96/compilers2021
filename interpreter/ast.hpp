@@ -18,89 +18,9 @@ using namespace std;
 #define BLUE "\u001b[34m"
 #define GREEN "\u001b[32m"
 
-class evalRet{
-public:
-  evalRet(int i, float f, char c, string s): intValue(i), floatValue(f), charValue(c), stringValue(s){}
 
-  int intValue;
-  float floatValue;
-  char charValue;
-  string stringValue;
-  string evalType;
-};
-
-class Symbol {
-public:
-  Symbol(string name, string scope, string type){
-    symbolName = name;
-    scopeName = scope;
-    symbolType = type;
-    initialised = false;
-  }
-
-  bool checkInitialised(){
-    if(!initialised) return false;
-    return true;
-  }
-
-  void setIntValue(int i){
-    intValue = i;
-  }
-
-  int getIntValue(){
-    return intValue;
-  }
-
-  void setFloatValue(float f){
-    floatValue = f;
-  }
-
-  float getFloatValue(){
-    return floatValue;
-  }
-
-  void setCharValue(char c){
-    charValue = c;
-  }
-
-  char getCharValue(){
-    return charValue;
-  }
-
-  void setStringValue(string s){
-    stringValue = s;
-  }
-
-  string getStringValue(){
-    return stringValue;
-  }
-
-  string getSymbolName(){
-    return symbolName;
-  }
-
-  string getSymbolType(){
-    return symbolType;
-  }
-
-  string getSymbolScope(){
-    return scopeName;
-  }
-private:
-  string symbolName;
-  string scopeName;
-  string symbolType;
-  bool initialised;
-  int intValue;
-  float floatValue;
-  char charValue;
-  string stringValue;
-};
-
-
-//extern std::map<string, Symbol> symbolTable;
-extern std::list<Symbol> symbolTable;
 extern int lineno;
+extern void yyerror(const char *msg);
 
 
 class AST {
@@ -130,7 +50,7 @@ public:
 
   virtual void run(std::ostream &out, string scope) const = 0;
 
-  virtual evalRet eval(string scope) const = 0;
+  //virtual evalRet eval(string scope) const = 0;
 };
 
 class ExprList: public Expr{
@@ -159,7 +79,7 @@ public:
     }
   }
 
-  virtual evalRet eval(string scope) const override{}
+  //virtual evalRet eval(string scope) const override{}
 
   bool isEmpty(){
     if(expr_list.empty()) return true;
@@ -169,6 +89,10 @@ public:
 private:
   std::vector<Expr *> expr_list;
 };
+
+
+
+
 
 
 class Id: public Expr {
@@ -182,7 +106,7 @@ public:
     ////out << "hello";
   }
 
-  virtual evalRet eval(string scope) const override{}
+  //virtual evalRet eval(string scope) const override{}
 
   /*
   virtual string run(string s) const override {
@@ -318,7 +242,7 @@ public:
     //out << "hello";
   }
 
-  virtual evalRet eval(string scope) const override{}
+  //virtual evalRet eval(string scope) const override{}
   /*
   virtual string run(string s) const override {
     s = idName;
@@ -394,7 +318,7 @@ public:
     //out << "hello";
   }
 
-  virtual evalRet eval(string scope) const override{}
+  //virtual evalRet eval(string scope) const override{}
 private:
   string idName;
 };
@@ -410,7 +334,7 @@ public:
     //out << "hello";
   }
 
-  virtual evalRet eval(string scope) const override{}
+  //virtual evalRet eval(string scope) const override{}
 private:
   char const_char;
 };
@@ -426,7 +350,7 @@ public:
     //out << "hello";
   }
 
-  virtual evalRet eval(string scope) const override{}
+  //virtual evalRet eval(string scope) const override{}
 private:
   float const_float;
 };
@@ -443,7 +367,7 @@ public:
     //out << "hello";
   }
 
-  virtual evalRet eval(string scope) const override{}
+  //virtual evalRet eval(string scope) const override{}
 private:
   int const_int;
 };
@@ -460,11 +384,136 @@ public:
     //out << "hello";
   }
 
-  virtual evalRet eval(string scope) const override{}
+  //virtual evalRet eval(string scope) const override{}
 private:
   string const_bool;
 };
 
+
+class Pattern: public AST{
+public:
+  Pattern(){}
+  Pattern(char c, int i): char_const(c), int_const(i) { constr_counter = 0; }
+  Pattern(string s, float f): str(s), float_const(f) { constr_counter = 1; }
+  Pattern(char c): char_const(c) { constr_counter = 2; }
+  Pattern(string s): str(s) { constr_counter = 3; }
+  Pattern(ConstrId *Id): constr_id(Id) { constr_counter = 4; }
+  Pattern(Id *id): id(id) { constr_counter = 5; }
+
+
+  virtual void printOn(std::ostream &out) const override{
+    switch(constr_counter){
+      case 0:
+        out << "Pattern(" << char_const << ", " << int_const << ")";
+      break;
+      case 1:
+        out << "Pattern(" << str << ", " << float_const << ")";
+      break;
+      case 2:
+        out << "Pattern(" << char_const << ")";
+      break;
+      case 3:
+        out << "Pattern(" << str << ")";
+      break;
+      case 4:
+        out << "Pattern(" << *constr_id << ")";
+      break;
+      case 5:
+        out << "Pattern(" << *id << ")";
+      break;
+    }
+  }
+
+  virtual void run(std::ostream &out, string scope) const override{
+    //out << "hello";
+  }
+
+  //virtual evalRet eval(string scope) const override{}
+private:
+  char char_const;
+  string str;
+  int int_const;
+  float float_const;
+  Id *id;
+  ConstrId *constr_id;
+  int constr_counter;
+};
+
+
+class PatternList: public Pattern{
+public:
+  PatternList(): pattern_list() {}
+
+  void append(Pattern *p){ pattern_list.push_back(p); }
+
+  virtual void printOn(std::ostream &out) const override{
+    if(!pattern_list.empty()){
+      out << "PatternList(";
+      bool first = true;
+      for (Pattern *p : pattern_list) {
+        if (!first) out << ", ";
+        first = false;
+        out << *p;
+      }
+      out << ")" ;
+    }
+  }
+
+  virtual void run(std::ostream &out, string scope) const override{
+  }
+
+
+private:
+  std::vector<Pattern *> pattern_list;
+};
+
+
+
+class Clause: public AST{
+public:
+  Clause(){}
+  Clause(Pattern *p, Expr *e): pattern(p), expr(e) {}
+
+  virtual void printOn(std::ostream &out) const override{
+    out << "Clause(" << *pattern << " -> " << *expr << ")";
+  }
+
+  virtual void run(std::ostream &out, string scope) const override{
+    //out << "hello";
+  }
+
+private:
+  Pattern *pattern;
+  Expr *expr;
+};
+
+
+class ClauseList: public Clause{
+public:
+  ClauseList(): clause_list() {}
+
+  void append(Clause *c){ clause_list.push_back(c); }
+
+  virtual void printOn(std::ostream &out) const override{
+    if(!clause_list.empty()){
+      out << "ClauseList(";
+      bool first = true;
+      for (Clause *c : clause_list) {
+        if (!first) out << ", ";
+        first = false;
+        out << *c;
+      }
+      out << ")" ;
+    }
+  }
+
+  virtual void run(std::ostream &out, string scope) const override{
+  }
+
+
+private:
+  std::vector<Clause *> clause_list;
+};
 
 
 
@@ -481,7 +530,7 @@ public:
     //out << "hello";
   }
 
-  virtual evalRet eval(string scope) const override{}
+  //virtual evalRet eval(string scope) const override{}
 
 private:
   Id *idName;
@@ -501,7 +550,7 @@ public:
     //out << "hello";
   }
 
-  virtual evalRet eval(string scope) const override{}
+  //virtual evalRet eval(string scope) const override{}
 
 private:
   Expr *cond, *expr;
@@ -521,7 +570,7 @@ public:
     //out << "hello";
   }
 
-  virtual evalRet eval(string scope) const override{}
+  //virtual evalRet eval(string scope) const override{}
 
 private:
   Expr *cond, *expr2, *expr3;
@@ -540,7 +589,7 @@ public:
     cout << "I am the BinOp\n";
   }
 
-  virtual evalRet eval(string scope) const override{}
+  //virtual evalRet eval(string scope) const override{}
 
 private:
   Expr *left;
@@ -561,7 +610,7 @@ public:
     //out << "hello";
   }
 
-  virtual evalRet eval(string scope) const override{}
+  //virtual evalRet eval(string scope) const override{}
 
 private:
   string op;
@@ -580,7 +629,7 @@ public:
     //out << "hello";
   }
 
-  virtual evalRet eval(string scope) const override{}
+  //virtual evalRet eval(string scope) const override{}
 private:
   Expr *expr;
 };
@@ -600,7 +649,7 @@ public:
     //out << "hello";
   }
 
-  virtual evalRet eval(string scope) const override{}
+  //virtual evalRet eval(string scope) const override{}
 private:
   int intConst;
   Id* idName;
@@ -620,7 +669,7 @@ public:
     //out << "hello";
   }
 
-  virtual evalRet eval(string scope) const override{}
+  //virtual evalRet eval(string scope) const override{}
 private:
   Expr *expr;
 };
@@ -648,7 +697,7 @@ public:
     //out << "hello";
   }
 
-  virtual evalRet eval(string scope) const override{}
+  //virtual evalRet eval(string scope) const override{}
 
   bool isEmpty(){
     if(expr_list.empty()) return true;
@@ -658,6 +707,23 @@ public:
 private:
   std::vector<Expr *> expr_list;
   Id *idName;
+};
+
+
+class MatchExpr: public Expr{
+public:
+  MatchExpr(Expr *e, ClauseList *cl): expr(e), clause_list(cl) {}
+
+  virtual void printOn(std::ostream &out) const override{
+    out << "MatchExpr(" << *expr << " with " << *clause_list << ")";
+  }
+
+  virtual void run(std::ostream &out, string scope) const override{
+    //out << "hello";
+  }
+private:
+  Expr *expr;
+  ClauseList *clause_list;
 };
 
 class NewType: public Expr{
@@ -672,7 +738,7 @@ public:
     //out << "hello";
   }
 
-  virtual evalRet eval(string scope) const override{}
+  //virtual evalRet eval(string scope) const override{}
 
 private:
   Type *myType;
@@ -761,20 +827,7 @@ public:
     out << "ParType(" << *idName << " : " << *myType << ")";
   }
 
-  virtual void run(std::ostream &out, string scope) const override{
-    for (std::list<Symbol>::iterator it=symbolTable.begin(); it != symbolTable.end(); it++){
-      if(((*it).getSymbolName() == idName->getIdName())  && ((*it).getSymbolScope() == scope)){
-        string temp = (*it).getSymbolName();
-        cout << "error: duplicate identifier with name \"" << temp << "\""<< endl;
-        exit(1);
-      }
-    }
-
-    Symbol idSymbol(idName->getIdName(), scope, myType->getTypeName());
-    //symbolTable.insert(std::pair<string, Symbol>(idName->getIdName(), id));
-    symbolTable.push_back(idSymbol);
-    out << idSymbol.getSymbolName() << idSymbol.getSymbolType() << idSymbol.getSymbolScope() << endl;
-  }
+  virtual void run(std::ostream &out, string scope) const override{ }
 
 private:
   Id *idName;
@@ -850,8 +903,8 @@ private:
 
 class Letdef: public Def{
 public:
-  Letdef(bool mut, Id *id_name, ParList *pl, Expr *e): Mutable(mut), idName(id_name), parList(pl), expr(e) {}
   Letdef(bool mut, Id *id_name, ParList *pl, Type *t, Expr *e): Mutable(mut), idName(id_name), parList(pl), myType(t), expr(e) {}
+  Letdef(bool mut, Id *id_name, ParList *pl, Expr *e): Mutable(mut), idName(id_name), parList(pl), expr(e) { }
   Letdef(bool mut, Id *id_name): Mutable(mut), idName(id_name) {}
   Letdef(bool mut, CommaExprList *cel): Mutable(mut), comma_expr_list(cel) {}
   Letdef(bool mut, Id *id_name, Type *t): Mutable(mut), idName(id_name), myType(t) {}
@@ -876,31 +929,7 @@ public:
     out << RED << ")" << RESET;
   }
 
-  virtual void run(std::ostream &out, string scope) const override{
-    if(idName == NULL){
-      out << "expected identifier" << endl;
-      exit(1);
-    }
-    else if(myType == NULL){
-      out <<  "syntax error: expected type near " << idName->getIdName() << endl;
-      exit(1);
-    }
-    else{
-      for (std::list<Symbol>::iterator it=symbolTable.begin(); it != symbolTable.end(); it++){
-        if(((*it).getSymbolName() == idName->getIdName())  && ((*it).getSymbolScope() == "global")){
-          string temp = (*it).getSymbolName();
-          cout << "error: duplicate identifier with name \"" << temp << "\""<< endl;
-          exit(1);
-        }
-      }
-      Symbol idSymbol(idName->getIdName(), "global", myType->getTypeName());
-      //symbolTable.insert(std::pair<string, Symbol>(idName->getIdName(), id));
-      symbolTable.push_back(idSymbol);
-      out << idSymbol.getSymbolName() << idSymbol.getSymbolType() << idSymbol.getSymbolScope() << endl;
-      parList->run(out, idSymbol.getSymbolName());
-      expr->run(out, idSymbol.getSymbolName());
-    }
-  }
+  virtual void run(std::ostream &out, string scope) const override{}
 
 private:
   bool Mutable;
@@ -927,7 +956,7 @@ public:
     //out << "hello";
   }
 
-  virtual evalRet eval(string scope) const override{}
+  //virtual evalRet eval(string scope) const override{}
 private:
   Def *let;
   Expr *expr;
@@ -979,7 +1008,7 @@ public:
     exprList->run(out, scope);
   }
 
-  virtual evalRet eval(string scope) const override{}
+  //virtual evalRet eval(string scope) const override{}
 private:
   Id *idName;
   ExprList *exprList;
@@ -999,23 +1028,30 @@ public:
     //out << "hello";
   }
 
-  virtual evalRet eval(string scope) const override{}
+  //virtual evalRet eval(string scope) const override{}
 private:
   ConstrId *idName;
   ExprList *exprList;
 };
 
 
-/*
-class SymbolTable: public AST {
-public:
 
+class PatternConstr: public Pattern{
+public:
+  PatternConstr(ConstrId *c, PatternList *pl): constr_Id(c), pattern_list(pl) {}
+
+  virtual void printOn(std::ostream &out) const override{
+    out << "PatternConstr(" << *constr_Id << *pattern_list << ")";
+  }
+
+  virtual void run(std::ostream &out, string scope) const override{
+    //out << "hello";
+  }
 
 private:
-  std::vector<Symbol *> symbol_list;
+  ConstrId *constr_Id;
+  PatternList *pattern_list;
 };
-*/
-
 
 
 

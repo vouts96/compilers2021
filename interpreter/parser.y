@@ -6,7 +6,6 @@
 #include "ast.hpp"
 #include "lexer.hpp"
 
-std::list<Symbol> symbolTable;
 %}
 
 
@@ -115,6 +114,10 @@ std::list<Symbol> symbolTable;
   ConstrId *constrId;
   BarConstrs *barConstrs;
   StringLiteral *stringLiteral;
+  Pattern *pattern;
+  Clause *clause;
+  PatternList *patternList;
+  ClauseList *clauseList;
 }
 
 //%expect 1
@@ -134,6 +137,10 @@ std::list<Symbol> symbolTable;
 %type<par> par
 %type<parList> params
 %type<commaExprList> commaExprs
+%type<pattern> pattern
+%type<patternList> patterns
+%type<clause> clause
+%type<clauseList> clauses
 %%
 
 
@@ -231,15 +238,15 @@ type:
 
 
 exprs:
-  /* nothing */ { $$ = new ExprList(); }
-  | exprs expr { $1->append($2); $$ = $1;}
+  /* nothing */  { $$ = new ExprList(); }
+  | exprs expr   { $1->append($2); $$ = $1;}
 ;
 
 
 
 commaExprs:
-  T_id '[' expr { $$ = new CommaExprList($1); $$->append($3); }
-  | commaExprs ',' expr { $1->append($3); $$ = $1; }
+  T_id '[' expr           { $$ = new CommaExprList($1); $$->append($3); }
+  | commaExprs ',' expr   { $1->append($3); $$ = $1; }
 ;
 
 
@@ -299,41 +306,39 @@ expr:
   | "while" expr "do" expr "done"   { $$ = new While($2, $4); }
   | "for" T_id '=' expr "to" expr "do" expr "done"  { $$ = new For($2, $4, $6, $8, true); }
   | "for" T_id '=' expr "downto" expr "do" expr "done" { $$ = new For($2, $4, $6, $8, false); }
-  //| "match" expr "with" clause "end"
+  | "match" expr "with" clauses "end"  { $$ = new MatchExpr($2, $4); }
 ;
 
 
-
-/*
-clause:
-  pattern_list "->" expr
-;
-
-
-pattern_list:
-  pattern
-  | '(' pattern ')'
-  | patterns
-  | T_Id patterns
-;
 
 patterns:
-  /* nothing * //__COMMENT HERE
-  | patterns pattern
+  /* nothing */        { $$ = new PatternList(); }
+  | patterns pattern   { $1->append($2); $$ = $1; }
 ;
 
+
 pattern:
-  '+' T_int
-  | '-' T_int
-  | "+." T_float
-  | "-." T_float
-  | T_char
-  | "true"
-  | "false"
-  | T_id
-  | T_Id
+  '+' T_int_const         { $$ = new Pattern('+', $2); }
+  | '-' T_int_const       { $$ = new Pattern('-', $2); }
+  | "+." T_float_const    { $$ = new Pattern("+.", $2); }
+  | "-." T_float_const    { $$ = new Pattern("-.", $2); }
+  | T_char_const          { $$ = new Pattern($1); }
+  | "true"                { $$ = new Pattern("true"); }
+  | "false"               { $$ = new Pattern("false"); }
+  | T_id                  { $$ = new Pattern($1); }
+  | T_Id                  { $$ = new Pattern($1); }
+  | '(' pattern ')'       { $$ = $2; }
+  | T_Id patterns         { $$ = new PatternConstr($1, $2); }
 ;
-*/
+
+clauses:
+  clause                  { $$ = new ClauseList(); $$->append($1); }
+  | clauses '|' clause        { $1->append($3); $$ = $1; }
+
+clause:
+  pattern "->" expr  { $$ = new Clause($1, $3); }
+;
+
 
 %%
 

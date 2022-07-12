@@ -177,6 +177,6 @@ D [0-9]
 void yyerror(const char *msg) {
   //int token;
   //token = yylex();
-  fprintf(stderr, "%s in line %d\n", msg, lineno);
+  fprintf(stderr, "%s up from line %d\n", msg, lineno);
   exit(1);
 }

@@ -10,7 +10,7 @@ let z =
 let y x = x + y 2 "sadsad" ! 2
 
 
-let main x d s : unit = true
+let main x d s : unit = '\xAF'
 
 
 let mutable main [true, malakas, 12, 33] : unit

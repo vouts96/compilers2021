@@ -1,0 +1,6 @@
+let y : int = match x + 1 with malakas -> x + 2 end
+
+let x = 2
+
+
+let z : int = match if malaks then 23 with  +. 2.1 -> malakas x y x end
