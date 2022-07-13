@@ -326,14 +326,15 @@ pattern:
   | "true"                { $$ = new Pattern("true"); }
   | "false"               { $$ = new Pattern("false"); }
   | T_id                  { $$ = new Pattern($1); }
-  | T_Id                  { $$ = new Pattern($1); }
+  //| T_Id                  { $$ = new Pattern($1); }
   | '(' pattern ')'       { $$ = $2; }
   | T_Id patterns         { $$ = new PatternConstr($1, $2); }
 ;
 
 clauses:
   clause                  { $$ = new ClauseList(); $$->append($1); }
-  | clauses '|' clause        { $1->append($3); $$ = $1; }
+  | clauses '|' clause    { $1->append($3); $$ = $1; }
+;
 
 clause:
   pattern "->" expr  { $$ = new Clause($1, $3); }
