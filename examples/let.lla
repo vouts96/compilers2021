@@ -1,16 +1,10 @@
-let fun x = 'a'
+let fun x : char = 'a'
 
-let y = 12.90
+let y : float = 12.90
 
-let z =
-  let y = 0 in
+let z : unit =
+  let y : int = 0 in
   print_int 2
 
 
-let y x = x + y 2 "sadsad" ! 2
-
-
-let main x d s : unit = '\xAF'
-
-
-let mutable main [true, malakas, 12, 33] : unit
+let mutable y [1,2,3,4] : int

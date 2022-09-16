@@ -1,7 +1,22 @@
-let add (x: int) (y : int)  : int =
-  print_int (x + y)
+let add (x: int) (y : int) : int = x + y
+
+let a : int = 3
+and b : int = 5
 
 
-let y : int = add 2 3
+let y : int = add 12 'a' asdf
 
-let z : char = '\xFF'
+let z : char = billys a s d f
+
+
+let a : unit =
+  let
+    z : unit =
+      let x (z:unit) (s:char) : int = 2 in
+      a billys
+  in
+match if 12 then 13 else 14 with +123 -> billys | billys -> billys end
+
+
+type tree = Nil | Node of int tree tree | Billys of int billys lex
+and leaf = Nil | Billys of neoi poroi

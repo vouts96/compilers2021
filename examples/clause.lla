@@ -1,6 +1,8 @@
-let y : int = match x + 1 with malakas -> x + 2 end
+let y (x : int) (z : int)  : int = match x + 1 with malakas -> x + 2 end
 
-let x = 2
+let x : int =
+  let x :int = malakas 2 in
+if x then y else z a s s
 
 
-let z : int = match if malaks then 23 with  +. 2.1 -> malakas x y x end
+let z : int = match if malaks then 23 with  +. 2.1 -> malakas x y z end
